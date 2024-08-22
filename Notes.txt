@@ -1,0 +1,18 @@
+https://www.youtube.com/watch?v=vL24eiwAG_g
+
+Authentication, JWT
+ORM Prisma 
+DB postgres
+
+
+## Go over
+
+### React
+
+1. Components/state/context objects
+2. Hooks (grabbing states for a component)
+3. zustand <-- why was this choosen (global state manager)
+4. global.d.ts
+
+### Typescript/javascript
+= foobar()=> ({ ...})  ? what does ( ) after => mean
