@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
             console.log("userId", userId)
             onlineUsers.delete(socket.id);
             onlineUserId.delete(userId);
-            io.emit('update online users', Array.from(onlineUsers.values()));
+            io.emit('disconnected-status-update', userId);
             console.log(`${userId} is disconnected.`);
         }
     })
