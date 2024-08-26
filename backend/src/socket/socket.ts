@@ -24,8 +24,7 @@ io.on('connection', (socket) => {
     socket.on('user-online', (userId: string) => {
         onlineUsers.set(socket.id, userId);
         onlineUserId.add(userId);
-        io.emit('online-status-update', Array.from(onlineUsers.values()));
-        // console.log('online-status-update: ' + Array.from(onlineUsers.values()))
+        io.emit('online-status-update', userId);
         console.log(`${userId} is online.`);
         console.log(onlineUserId)
         for (const [socketId, userId] of onlineUsers) {
@@ -47,11 +46,12 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('check-user-status', (data, callback) => {
-        const { userId } = data;
+    socket.on('check-user-status', (userId, callback) => {
+        console.log("check-user-status data:", userId)
 
-        // Perform logic here
+        // // Perform logic here
         const isOnline = onlineUserId.has(userId);
+        console.log("user with id: " + userId + " is " + isOnline)
 
         callback(isOnline);
         
