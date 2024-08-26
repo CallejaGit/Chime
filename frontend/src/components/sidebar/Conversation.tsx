@@ -30,7 +30,11 @@ const Conversation = ({ conversation }: { conversation: ConversationType }) => {
 					console.log("participants: ", participants, userId)
 					if (userId == participants[0].id) {
 						setIsOnline(true)
-						console.log("here I go", isOnline)
+					}
+				})
+				socket.on('disconnected-status-update', (userId) => {
+					if (userId == participants[0].id) {
+						setIsOnline(false)
 					}
 				})
 			}
