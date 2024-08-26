@@ -9,7 +9,7 @@ type MainSocket = {
 
 export const SocketContext = createContext<MainSocket>({
     socket: null,
-    getSocket: () => null
+    getSocket: () => null,
 })
 
 export const useSocketContext = () => {
@@ -34,21 +34,22 @@ export const SocketContextProvider = ({children}:{children:ReactNode}) => {
                 setSocketState(newSocket)
                 newSocket.emit('user-online', authUser.id)
 
-                // newSocket.on('online-users-updated', (data) => {
+                // newSocket.on('online-status-update', (data) => {
                 //     console.log('Recieved data: ', data)
                 // });
+            }
+        }
 
-                // return () => {
-                //     newSocket.disconnect();
-                //     setSocketState(null);
-                // }
-
+        return () => {
+            if(socket){
+                socket.disconnect();
+                setSocketState(null);
             }
         }
     }, [socket, authUser])
 
     return(
-        <SocketContext.Provider value={{socket, getSocket}}>
+        <SocketContext.Provider value={{socket, getSocket: () => socket}}>
             {children}
         </SocketContext.Provider>
     )
