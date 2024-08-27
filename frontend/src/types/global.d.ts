@@ -3,6 +3,7 @@ type ParticipantType = {
     fullName: string;
     username: string;
     profilePic: string;
+    onlineStatus: string;
 }
 
 type ConversationType = {

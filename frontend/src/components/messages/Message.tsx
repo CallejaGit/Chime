@@ -27,19 +27,22 @@ const Message = ({ message }: { message: MessageType }) => {
 	const fromMe = message.senderId == authUser?.id;
 	const chatClass = fromMe ? "chat-end" : "chat-start";
 
-	console.log("../messages/Message.tsx");
-	console.log(fromMe)
-	console.log(message.body)
-
 	const img = fromMe
 		? authUser?.profilePic
 		: selectedConversation?.conversationProfilePic;
 
 	const bubbleBg = fromMe ? "bg-blue-500" : "";
 
+
+	const isOnline = fromMe
+		? true
+		: selectedConversation?.participants[0].onlineStatus == 'online';
+	console.log("Message.tsx: participants", selectedConversation?.participants[0])
+	console.log("Message.tsx: isOnline", selectedConversation?.participants[0].username, isOnline)
+
 	return (
 		<div className={`chat ${chatClass}`}>
-			<div className='hidden md:block chat-image avatar'>
+			<div className={`hidden md:block chat-image avatar ${isOnline ? "online" : ""}`}>
 				<div className='w-6 md:w-10 rounded-full'>
 					<img alt='Tailwind CSS chat bubble component' src={img} />
 				</div>
