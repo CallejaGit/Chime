@@ -33,10 +33,6 @@ export const SocketContextProvider = ({children}:{children:ReactNode}) => {
                 const newSocket = io('http://localhost:5000')
                 setSocketState(newSocket)
                 newSocket.emit('user-online', authUser.id)
-
-                // newSocket.on('online-status-update', (data) => {
-                //     console.log('Recieved data: ', data)
-                // });
             }
         }
 

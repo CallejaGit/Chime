@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { useAuthContext } from "../../context/AuthContext";
-import { useSocketContext } from "../../context/SocketContext";
 import useConversation from "../../zustand/useConversation";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 
 const Conversation = ({ conversation }: { conversation: ConversationType }) => {
 	console.log("from ../sidebar/Conversation.tsx")
@@ -9,44 +7,22 @@ const Conversation = ({ conversation }: { conversation: ConversationType }) => {
 
 	const { setSelectedConversation, selectedConversation } = useConversation();
 	const isSelected = selectedConversation?.id === conversation.id
+	const participants = conversation.participants
 
-	const { isLoading, authUser } = useAuthContext();
-	const { getSocket } = useSocketContext();
+	let isOnline = false;
 
-	const [isOnline, setIsOnline] = useState(false);
-
-	useEffect(()=> {
-		if (!isLoading && authUser) {
-			const socket = getSocket();
-			if (socket) {
-				const participants = conversation.participants
-				if (participants.length = 1) {
-					const userId = participants[0].id
-					socket.emit('check-user-status', userId, (isOnline: boolean) => {
-						setIsOnline(isOnline)
-					})
-				}
-				socket.on('online-status-update', (userId) => {
-					console.log("participants: ", participants, userId)
-					if (userId == participants[0].id) {
-						setIsOnline(true)
-					}
-				})
-				socket.on('disconnected-status-update', (userId) => {
-					if (userId == participants[0].id) {
-						setIsOnline(false)
-					}
-				})
-			}
+	const onlineStatus = useOnlineStatus();
+	if (participants.length == 1) {
+		const otherUser = participants[0]
+		if (otherUser.id in onlineStatus) {
+			isOnline = onlineStatus[otherUser.id];
+			isOnline ? otherUser.onlineStatus = 'online' : otherUser.onlineStatus = 'offline'
+			console.log('conversation.tsx isOnline:', otherUser.id, isOnline)
+		} else {
+			otherUser.onlineStatus = 'offline'
 		}
-		return () => {
-			const socket = getSocket();
-			if(socket){
-				socket.off('online-status-update');
-			}
-		}
+	}
 
-	}, [isLoading, authUser, isOnline])
 
 	return (
 		<>
