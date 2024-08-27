@@ -1,4 +1,5 @@
 import useConversation from "../../zustand/useConversation";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 
 const Conversation = ({ conversation }: { conversation: ConversationType }) => {
 	console.log("from ../sidebar/Conversation.tsx")
@@ -6,9 +7,23 @@ const Conversation = ({ conversation }: { conversation: ConversationType }) => {
 
 	const { setSelectedConversation, selectedConversation } = useConversation();
 	const isSelected = selectedConversation?.id === conversation.id
+	const participants = conversation.participants
+
+	let isOnline = false;
+
+	const onlineStatus = useOnlineStatus();
+	if (participants.length == 1) {
+		const otherUser = participants[0]
+		if (otherUser.id in onlineStatus) {
+			isOnline = onlineStatus[otherUser.id];
+			isOnline ? otherUser.onlineStatus = 'online' : otherUser.onlineStatus = 'offline'
+			console.log('conversation.tsx isOnline:', otherUser.id, isOnline)
+		} else {
+			otherUser.onlineStatus = 'offline'
+		}
+	}
 
 
-	const isOnline = false;
 	return (
 		<>
 			<div className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer
